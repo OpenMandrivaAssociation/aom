@@ -21,7 +21,7 @@ BuildRequires:  cmake
 BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  perl(Getopt::Long)
-BuildRequires:  wxgtk-devel
+BuildRequires:  wxgtku3.0-devel
 BuildRequires:  yasm
 
 Provides:       av1 = %{version}-%{release}
