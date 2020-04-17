@@ -1,11 +1,12 @@
-%define major 0
+%define major 1
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
+%define staticname %mklibname %{name} -d -s
 
 # Use latest git, until regular and standardized releases will be available.
 # We can't download (for now) download release tarball or last. Thats why we need download git by hand.
-
-%define gitdate 28.10.2019
+# Use the YYYY.MM.DD format to make sure the number always goes up, not down (31.1.2020 > 10.4.2020)
+%define gitdate 2020.04.17
 
 Name:		aom
 Version:	1.0.0
@@ -15,7 +16,7 @@ Group:		System/Libraries
 License:	BSD
 URL:		http://aomedia.org/
 #Source should be taken from: https://aomedia.googlesource.com/aom/
-Source0:	%{name}-%{gitdate}.tar.xz
+Source0:	%{name}-%{gitdate}.tar.zst
 BuildRequires:	cmake
 BuildRequires:	doxygen
 BuildRequires:	graphviz
@@ -57,10 +58,19 @@ video format.
 %package -n %{develname}
 Summary:	Development files for aom
 Group:		Development/C
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
 
 %description -n %{develname}
 Development files for aom, the royalty-free next-generation 
+video format.
+
+%package -n %{staticname}
+Summary:	Static library files for aom
+Group:		Development/C
+Requires:	%{develname} = %{version}-%{release}
+
+%description -n %{staticname}
+Static library files for aom, the royalty-free next-generation 
 video format.
 
 %prep
@@ -109,9 +119,14 @@ install -pm 0755 build/examples/analyzer %{buildroot}%{_bindir}/aomanalyzer
 %files -n %{libname}
 %license LICENSE PATENTS
 %{_libdir}/libaom.so.%{major}{,.*}
+# Seems to be a compat symlink
+%{_libdir}/libaom.so.0
 
 %files -n %{develname}
 %doc build/docs/html/
 %{_includedir}/%{name}
 %{_libdir}/libaom.so
 %{_libdir}/pkgconfig/%{name}.pc
+
+%files -n %{staticname}
+%{_libdir}/libaom.a
