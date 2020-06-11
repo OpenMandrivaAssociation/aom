@@ -1,29 +1,41 @@
-%define major 1
+# ffmpeg uses aom, wine uses ffmpeg
+%ifarch %{x86_64}
+%bcond_without compat32
+%endif
+
+%define major 2
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
+%define lib32name %mklib32name %{name} %{major}
+%define devel32name %mklib32name %{name} -d
+%define static32name %mklib32name %{name} -d -s
 
 # Use latest git, until regular and standardized releases will be available.
 # We can't download (for now) download release tarball or last. Thats why we need download git by hand.
 # Use the YYYY.MM.DD format to make sure the number always goes up, not down (31.1.2020 > 10.4.2020)
-%define gitdate 2020.04.17
+#define gitdate 2020.06.11
 
 Name:		aom
-Version:	1.0.0
-Release:	1.%{gitdate}
+Version:	2.0.0
+Release:	1%{?gitdate:.%{gitdate}}
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
 License:	BSD
 URL:		http://aomedia.org/
-#Source should be taken from: https://aomedia.googlesource.com/aom/
-Source0:	%{name}-%{gitdate}.tar.zst
+# Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
+# bb35ba91.... is the commit hash for the v2.0.0 tag
+Source0:	https://aomedia.googlesource.com/aom/+archive/bb35ba9148543f22ba7d8642e4fbd29ae301f5dc.tar.gz
 BuildRequires:	cmake
+BuildRequires:	ninja
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	perl(Getopt::Long)
 BuildRequires:	wxgtku3.0-devel
 BuildRequires:	yasm
 Provides:	av1 = %{version}-%{release}
+# aomanalyzer has been removed upstream
+Obsoletes:	%{name}-extra-tools < %{EVRD}
 
 %description
 The Alliance for Open Media’s focus is to deliver a next-generation
@@ -38,14 +50,6 @@ video format that is:
    user-generated content.
 
 This package contains the reference encoder and decoder.
-
-%package extra-tools
-Summary:	Extra tools for aom
-Group:		System/Libraries
-Requires:	%{name} = %{version}-%{release}
-
-%description extra-tools
-This package contains the aom analyzer.
 
 %package -n %{libname}
 Summary:	Library files for aom
@@ -73,10 +77,51 @@ Requires:	%{develname} = %{version}-%{release}
 Static library files for aom, the royalty-free next-generation 
 video format.
 
-%prep
-%autosetup -p1 -n %{name}-%{gitdate}
+%if %{with compat32}
+%package -n %{lib32name}
+Summary:	Library files for aom (32-bit)
+Group:		System/Libraries
 
-%build
+%description -n %{lib32name}
+Library files for aom, the royalty-free next-generation 
+video format.
+
+%package -n %{devel32name}
+Summary:	Development files for aom (32-bit)
+Group:		Development/C
+Requires:	%{develname} = %{version}-%{release}
+Requires:	%{lib32name} = %{version}-%{release}
+
+%description -n %{devel32name}
+Development files for aom, the royalty-free next-generation 
+video format.
+
+%package -n %{static32name}
+Summary:	Static library files for aom (32-bit)
+Group:		Development/C
+Requires:	%{devel32name} = %{version}-%{release}
+
+%description -n %{static32name}
+Static library files for aom, the royalty-free next-generation 
+video format.
+%endif
+
+%prep
+%autosetup -p1 -c -n %{name}%{?gitdate:-%{gitdate}}
+
+%if %{with compat32}
+%cmake32 \
+	-Wno-dev -DENABLE_CCACHE=1 \
+	-DCMAKE_SKIP_RPATH=1 \
+	-DAOM_TARGET_CPU=x86 \
+	-DCONFIG_WEBM_IO=1 \
+	-DENABLE_DOCS=0 \
+	-DCONFIG_ANALYZER=0 \
+	-DCONFIG_LOWBITDEPTH=1 \
+	-G Ninja
+cd ..
+%endif
+
 %cmake \
 	-Wno-dev -DENABLE_CCACHE=1 \
 	-DCMAKE_SKIP_RPATH=1 \
@@ -98,14 +143,21 @@ video format.
 	-DCONFIG_WEBM_IO=1 \
 	-DENABLE_DOCS=1 \
 	-DCONFIG_ANALYZER=1 \
-	-DCONFIG_LOWBITDEPTH=1
+	-DCONFIG_LOWBITDEPTH=1 \
+	-G Ninja
 
-%make_build
+
+%build
+%if %{with compat32}
+%ninja_build -C build32
+%endif
+%ninja_build -C build
 
 %install
-%make_install -C build
-
-install -pm 0755 build/examples/analyzer %{buildroot}%{_bindir}/aomanalyzer
+%if %{with compat32}
+%ninja_install -C build32
+%endif
+%ninja_install -C build
 
 %files
 %doc AUTHORS CHANGELOG README.md
@@ -113,14 +165,9 @@ install -pm 0755 build/examples/analyzer %{buildroot}%{_bindir}/aomanalyzer
 %{_bindir}/aomdec
 %{_bindir}/aomenc
 
-%files extra-tools
-%{_bindir}/aomanalyzer
-
 %files -n %{libname}
 %license LICENSE PATENTS
 %{_libdir}/libaom.so.%{major}{,.*}
-# Seems to be a compat symlink
-%{_libdir}/libaom.so.0
 
 %files -n %{develname}
 %doc build/docs/html/
@@ -130,3 +177,15 @@ install -pm 0755 build/examples/analyzer %{buildroot}%{_bindir}/aomanalyzer
 
 %files -n %{staticname}
 %{_libdir}/libaom.a
+
+%if %{with compat32}
+%files -n %{lib32name}
+%{_prefix}/lib/libaom.so.%{major}{,.*}
+
+%files -n %{devel32name}
+%{_prefix}/lib/libaom.so
+%{_prefix}/lib/pkgconfig/%{name}.pc
+
+%files -n %{static32name}
+%{_prefix}/lib/libaom.a
+%endif
