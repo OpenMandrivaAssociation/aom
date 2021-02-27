@@ -17,15 +17,15 @@
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	2.0.0
+Version:	2.0.2
 Release:	1%{?gitdate:.%{gitdate}}
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
 License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
-# bb35ba91.... is the commit hash for the v2.0.0 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/bb35ba9148543f22ba7d8642e4fbd29ae301f5dc.tar.gz
+# d67d4cb2.... is the commit hash for the v2.0.2 tag
+Source0:	https://aomedia.googlesource.com/aom/+archive/d67d4cb2993891fa4e60f5aa7c18c80a98ccc506.tar.gz
 BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	doxygen
