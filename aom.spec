@@ -3,7 +3,7 @@
 %bcond_without compat32
 %endif
 
-%define major 2
+%define major 3
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -d -s
@@ -17,21 +17,22 @@
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	2.0.2
-Release:	1%{?gitdate:.%{gitdate}}
+Version:	3.0.0
+Release:	0.rc1%{?gitdate:.%{gitdate}}.1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
 License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
-# d67d4cb2.... is the commit hash for the v2.0.2 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/d67d4cb2993891fa4e60f5aa7c18c80a98ccc506.tar.gz
+# d67d4cb2.... is the commit hash for the v3.0.0-rc1 tag
+Source0:	https://aomedia.googlesource.com/aom/+archive/2d39790c4bf236a21f4155db8d97b41cca2d6979.tar.gz
+Patch0:		aom-3.0.0-rc1-fix-build-of-analyzer.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	perl(Getopt::Long)
-BuildRequires:	wxgtku3.0-devel
+BuildRequires:	wxgtku3.1-devel
 BuildRequires:	yasm
 Provides:	av1 = %{version}-%{release}
 # aomanalyzer has been removed upstream

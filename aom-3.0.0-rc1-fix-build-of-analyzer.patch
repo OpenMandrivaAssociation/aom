@@ -1,0 +1,11 @@
+diff -up aom/examples/analyzer.cc.omv~ aom/examples/analyzer.cc
+--- aom/examples/analyzer.cc.omv~	2021-03-20 17:07:19.028161201 +0100
++++ aom/examples/analyzer.cc	2021-03-20 17:08:01.946604397 +0100
+@@ -43,6 +43,7 @@ class AV1Decoder {
+   insp_frame_data frame_data;
+ 
+   aom_codec_ctx_t codec;
++  aom_codec_iface_t *decoder;
+   bool show_padding;
+ 
+  public:
