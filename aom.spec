@@ -25,7 +25,7 @@ License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
 # 33aff858.... is the commit hash for the v3.0.0 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/ae2be8030200925895fa6e98bd274ffdb595cbf6.tar.gz
+Source0:	https://aomedia.googlesource.com/aom/+archive/aom-ae2be8030200925895fa6e98bd274ffdb595cbf6.tar.gz
 Patch0:		aom-3.0.0-rc1-fix-build-of-analyzer.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
