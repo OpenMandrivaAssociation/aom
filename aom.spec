@@ -11,13 +11,13 @@
 %define devel32name %mklib32name %{name} -d
 %define static32name %mklib32name %{name} -d -s
 
-# Use latest git, until regular and standardized releases will be available.
-# We can't download (for now) download release tarball or last. Thats why we need download git by hand.
+# Use latest release tag or git, until regular and standardized releases will be available.
+# We can't download (for now) release tarball. Thats why we need download tag or git by hand.
 # Use the YYYY.MM.DD format to make sure the number always goes up, not down (31.1.2020 > 10.4.2020)
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	3.1.0
+Version:	3.1.2
 Release:	%{?gitdate:0.%{gitdate}.}1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
@@ -25,7 +25,7 @@ License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
 # 33aff858.... is the commit hash for the v3.0.0 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/33aff8586e35ffe385637f6aa2c991858c0fb58e.tar.gz
+Source0:	https://aomedia.googlesource.com/aom/+archive/ae2be8030200925895fa6e98bd274ffdb595cbf6.tar.gz
 Patch0:		aom-3.0.0-rc1-fix-build-of-analyzer.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
