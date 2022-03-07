@@ -3,6 +3,10 @@
 %bcond_without compat32
 %endif
 
+# Analyzer requires wxWidgets, which requires webkitgtk, which
+# requires libavif, which requires libaom... Bad cyclical dependency
+%bcond_without bootstrap
+
 %define major 3
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -17,22 +21,24 @@
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	3.2.0
+Version:	3.3.0
 Release:	%{?gitdate:0.%{gitdate}.}1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
 License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
-# 287164de.... is the commit hash for the v3.2.0 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/aom-287164de79516c25c8c84fd544f67752c170082a.tar.gz
+# 87460cef.... is the commit hash for the v3.3.0 tag
+Source0:	https://aomedia.googlesource.com/aom/+archive/87460cef80fb03def7d97df1b47bad5432e5e2e4.tar.gz
 Patch0:		aom-3.0.0-rc1-fix-build-of-analyzer.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	perl(Getopt::Long)
+%if ! %{with bootstrap}
 BuildRequires:	wxgtku3.1-devel
+%endif
 BuildRequires:	yasm
 Provides:	av1 = %{version}-%{release}
 # aomanalyzer has been removed upstream
@@ -143,7 +149,11 @@ cd ..
 %endif
 	-DCONFIG_WEBM_IO=1 \
 	-DENABLE_DOCS=1 \
+%if %{with bootstrap}
+	-DCONFIG_ANALYZER=0 \
+%else
 	-DCONFIG_ANALYZER=1 \
+%endif
 	-DCONFIG_LOWBITDEPTH=1 \
 	-G Ninja
 
