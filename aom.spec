@@ -7,6 +7,8 @@
 # requires libavif, which requires libaom... Bad cyclical dependency
 %bcond_without bootstrap
 
+%global optflags %{optflags} -O3
+
 %define major 3
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
@@ -21,7 +23,7 @@
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	3.3.0
+Version:	3.4.0
 Release:	%{?gitdate:0.%{gitdate}.}1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
@@ -29,7 +31,7 @@ License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
 # 87460cef.... is the commit hash for the v3.3.0 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/87460cef80fb03def7d97df1b47bad5432e5e2e4.tar.gz
+Source0:	https://aomedia.googlesource.com/aom/+archive/fc430c57c7b0307b4c5ffb686cd90b3c010d08d2.tar.gz
 Patch0:		aom-3.0.0-rc1-fix-build-of-analyzer.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
@@ -88,7 +90,8 @@ video format.
 %package -n %{lib32name}
 Summary:	Library files for aom (32-bit)
 Group:		System/Libraries
-
+BuildRequires:	libc6
+Requires:	libc6
 %description -n %{lib32name}
 Library files for aom, the royalty-free next-generation 
 video format.
