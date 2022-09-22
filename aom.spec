@@ -117,7 +117,7 @@ video format.
 %endif
 
 %prep
-%autosetup -p1 -c -n %{?gitdate:-%{gitdate}}
+%autosetup -p1 -c
 
 %if %{with compat32}
 %cmake32 \
