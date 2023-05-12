@@ -23,7 +23,7 @@
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	3.6.0
+Version:	3.6.1
 Release:	%{?gitdate:0.%{gitdate}.}1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
@@ -31,7 +31,7 @@ License:	BSD
 URL:		http://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
 # bcfe6fbf.... is the commit hash for the v3.3.0 tag
-Source0:	https://aomedia.googlesource.com/aom/+archive/3c65175b1972da4a1992c1dae2365b48d13f9a8d.tar.gz
+Source0:	https://aomedia.googlesource.com/aom/+archive/7ade96172b95adc91a5d85bf80c90989cd543ee8.tar.gz
 Patch0:		aom-3.0.0-rc1-fix-build-of-analyzer.patch
 BuildRequires:	cmake
 BuildRequires:	ninja
