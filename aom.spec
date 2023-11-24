@@ -23,7 +23,7 @@
 #define gitdate 2020.06.11
 
 Name:		aom
-Version:	3.7.0
+Version:	3.7.1
 Release:	%{?gitdate:0.%{gitdate}.}1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
