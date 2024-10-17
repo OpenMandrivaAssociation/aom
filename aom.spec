@@ -28,7 +28,7 @@ Release:	%{?gitdate:0.%{gitdate}.}1
 Summary:	Royalty-free next-generation video format
 Group:		System/Libraries
 License:	BSD
-URL:		http://aomedia.org/
+URL:		https://aomedia.org/
 # Source for git snapshots should be taken from: https://aomedia.googlesource.com/aom/
 # 6054fae.... is the commit hash for the v3.7.0 tag
 Source0:	https://aomedia.googlesource.com/aom/+archive/aom-c2fe6bf370f7c14fbaf12884b76244a3cfd7c5fc.tar.gz
