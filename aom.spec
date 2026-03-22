@@ -188,6 +188,7 @@ cd ..
 %{_includedir}/%{name}
 %{_libdir}/libaom.so
 %{_libdir}/pkgconfig/%{name}.pc
+%{_libdir}/cmake/AOM/
 
 %files -n %{staticname}
 %{_libdir}/libaom.a
@@ -199,6 +200,7 @@ cd ..
 %files -n %{devel32name}
 %{_prefix}/lib/libaom.so
 %{_prefix}/lib/pkgconfig/%{name}.pc
+%{_prefix}/lib/cmake/AOM/
 
 %files -n %{static32name}
 %{_prefix}/lib/libaom.a
